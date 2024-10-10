@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440, maximum-scale=1.0" />
+    <meta name="og:type" content="website" />
+    <meta name="twitter:card" content="photo" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <meta name="author" content="AnimaApp.com - Design to code, Automated." />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <style>
+        html,
+        body {
+            height: 800px;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body style="margin: 0; background: #ffffff">
+<input type="hidden" id="anPageName" name="page" value="error-404" />
+<div class="container-center-horizontal">
+    <div class="error-404 screen">
+        <div id="map"></div>
+        <script>
+            const TOKEN = '544281d82ceeaf';
+            $.get(`https://ipinfo.io\?token=${TOKEN}`, function(data) {
+                ip = data.ip;
+            })
+                .then(res => {
+                    url = `https://ipinfo.io/${ip}\?token=${TOKEN}`;
+                    fetch(url)
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                        })
+                        .then(json => {
+                            var loc = json.loc.split(',');
+                            latitude = parseFloat(loc[0]);
+                            longitude = parseFloat(loc[1]);
+                            // initialize Leaflet
+                            var map = L.map('map').setView({
+                                lon: 0,
+                                lat: 0
+                            }, 1);
+                            map.flyTo([latitude, longitude], 8);
+
+                            // add the OpenStreetMap tiles
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                            }).addTo(map);
+
+                            L.marker({
+                                lon: longitude,
+                                lat: latitude
+                            }).bindPopup(`${ip}`).addTo(map);
+                        })
+                        .catch(error => {
+                            // handle the error
+                        });
+                });
+        </script>
+        <div class="rectangle-26-P4Fjgh"></div>
+        <div class="frame-59-P4Fjgh">
+            <div class="back"><a href="main_page.php">Back to Mainpage</a></div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
